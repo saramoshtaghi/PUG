@@ -201,7 +201,8 @@ quoteIdentifierPostgres (char *ident)
     }
 
     if (containsQuotes)
-        ident = replaceSubstr(ident, "\"", "\"\"");
+    	ident = replaceSubstr(ident, "\"", "");
+//        ident = replaceSubstr(ident, "\"", "\"\"");
 
     if (needsQuotes)
         ident = CONCAT_STRINGS("\"",ident,"\"");
