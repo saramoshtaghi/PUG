@@ -4998,9 +4998,10 @@ setIDBBody (DLRule *r)
 }
 
 
+// auto generation of domain
 static void noAssociateDom (List *negedbRules, List *helpRules, List *unifiedRule, DLProgram *solvedProgram, List *edbRules)
 {
-	// auto generation of user domain
+	// attribute-level domain
 	if (getBoolOption(OPTION_ATTR_DOM))
 	{
 		// store the pair of each variable in positive goals and positive relation names
@@ -5018,11 +5019,14 @@ static void noAssociateDom (List *negedbRules, List *helpRules, List *unifiedRul
 
 					FOREACH(Node,n,a->args)
 					{
+						char *key = CONCAT_STRINGS(a->rel, gprom_itoa(pos));
+
 						if(isA(n,DLVar))
 						{
 							DLVar *v = (DLVar *) n;
 
-							if(!MAP_HAS_STRING_KEY(varToDom,v->name))
+							if(!MAP_HAS_STRING_KEY(varToDom,v->name) &&
+									!MAP_HAS_STRING_KEY(relPosToDomHead,key))
 							{
 								// create domain rule
 								char *domRel = CONCAT_STRINGS("D",v->name);
@@ -5058,8 +5062,10 @@ static void noAssociateDom (List *negedbRules, List *helpRules, List *unifiedRul
 								MAP_ADD_STRING_KEY(varToDom,v->name,(Node *) domRule);
 
 								// add (relPos, domHead)
-								char *key = CONCAT_STRINGS(a->rel, gprom_itoa(pos));
-								MAP_ADD_STRING_KEY(relPosToDomHead,key,domRule->head);
+//								char *key = CONCAT_STRINGS(a->rel, gprom_itoa(pos));
+								if(!MAP_HAS_STRING_KEY(relPosToDomHead,key)) {
+									MAP_ADD_STRING_KEY(relPosToDomHead,key,domRule->head);
+								}
 
 								// collect domain rules
 								DL_SET_BOOL_PROP(domRule,DL_DOMAIN_RULE);
@@ -5068,8 +5074,10 @@ static void noAssociateDom (List *negedbRules, List *helpRules, List *unifiedRul
 							else
 							{
 								DLRule *domRule = (DLRule *) MAP_GET_STRING(varToDom,v->name);
-								char *key = CONCAT_STRINGS(a->rel, gprom_itoa(pos));
-								MAP_ADD_STRING_KEY(relPosToDomHead,key,domRule->head);
+//								char *key = CONCAT_STRINGS(a->rel, gprom_itoa(pos));
+								if(!MAP_HAS_STRING_KEY(relPosToDomHead,key)) {
+									MAP_ADD_STRING_KEY(relPosToDomHead,key,domRule->head);
+								}
 							}
 						}
 
@@ -5116,7 +5124,9 @@ static void noAssociateDom (List *negedbRules, List *helpRules, List *unifiedRul
 								DLAtom *valueForDomAtom = (DLAtom *) MAP_GET_STRING(relPosToDomHead,searchForDomAtom);
 
 								char *key = STRING_VALUE(MAP_GET_STRING(headForDomAtom,v->name));
-								MAP_ADD_STRING_KEY(relPosToDomHead,key,valueForDomAtom);
+								if(!MAP_HAS_STRING_KEY(relPosToDomHead,key)) {
+									MAP_ADD_STRING_KEY(relPosToDomHead,key,valueForDomAtom);
+								}
 							}
 						}
 						pos++;
