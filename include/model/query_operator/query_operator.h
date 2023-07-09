@@ -322,4 +322,10 @@ extern boolean visitQOGraph (QueryOperator *q, TraversalOrder tOrder,
 extern unsigned int numOpsInGraph (QueryOperator *root);
 extern unsigned int numOpsInTree (QueryOperator *root);
 
+/* provenance question */
+NEW_ENUM_WITH_TO_STRING(ProvQuestion,
+        PROV_Q_WHY,
+        PROV_Q_WHYNOT
+);
+
 #endif /* QUERY_OPERATOR_H_ */

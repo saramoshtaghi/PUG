@@ -212,6 +212,7 @@ summarizationStatement:
 		{ 
 			$$ = CONCAT_LISTS($1,$2,LIST_MAKE($3,$4,$5,$6)); 
 		}
+		| optionalSumSample { $$ = LIST_MAKE($1); } /* temparary parsing for creating sample of big provenance */
 		
 /*
 		| FOR TOP intConst SUMMARIZED BY name WITH SAMPLE '(' intConst ')' '.'

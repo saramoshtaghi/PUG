@@ -198,8 +198,15 @@ analyzeSummerizationBasics (DLProgram *p)
 	// set the summarization type
     DL_SET_PROP(p, PROP_SUMMARIZATION_QTYPE, createConstInt(qType));
 
-    // mark as summarization
-    DL_SET_BOOL_PROP(p, PROP_SUMMARIZATION_DOSUM);
+    //TODO: Separate sampling computation
+    if(LIST_LENGTH(p->sumOpts) == 1)
+    {
+		// mark as sampling
+		DL_SET_BOOL_PROP(p, PROP_SAMPLING_DOSUM);
+    }
+    else
+		// mark as summarization
+		DL_SET_BOOL_PROP(p, PROP_SUMMARIZATION_DOSUM);
 
     // turn summarization options into properties
     FOREACH(Node,n,p->sumOpts)

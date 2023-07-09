@@ -24,6 +24,7 @@
 #include "provenance_rewriter/transformation_rewrites/transformation_prov_main.h"
 //#include "provenance_rewriter/uncertainty_rewrites/uncert_rewriter.h"
 #include "provenance_rewriter/summarization_rewrites/summarize_main.h"
+#include "provenance_rewriter/summarization_rewrites/sampling_main.h"
 #include "provenance_rewriter/xml_rewrites/xml_prov_main.h"
 #include "temporal_queries/temporal_rewriter.h"
 
@@ -108,6 +109,7 @@ rewriteProvenanceComputation (ProvenanceComputation *op)
     QueryOperator *result = NULL;
 //    boolean requiresPostFiltering = FALSE;
     boolean applySummarization = HAS_STRING_PROP(op, PROP_SUMMARIZATION_DOSUM);
+    boolean applySampling = HAS_STRING_PROP(op, PROP_SAMPLING_DOSUM);
     HashMap *properties = (HashMap *) copyObject(op->op.properties);
 
 //    // for a sequence of updates of a transaction merge the sequence into a single
@@ -197,6 +199,12 @@ rewriteProvenanceComputation (ProvenanceComputation *op)
     if (applySummarization)
     {
         result = (QueryOperator *) rewriteSummaryOutput((Node *) result, properties, PROV_Q_WHY);
+    }
+
+    // apply sampling
+    if (applySampling)
+    {
+        result = (QueryOperator *) rewriteSampleOutput((Node *) result, properties, PROV_Q_WHY);
     }
 
 //    // for reenactment we may have to postfilter results if only rows affected by the transaction should be shown

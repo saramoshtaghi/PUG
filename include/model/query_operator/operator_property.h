@@ -29,6 +29,7 @@
 #define PROP_TIP_ATTR "TIP_ATTR"							// indicates TIP attribute
 
 // provenance summarization
+#define PROP_SAMPLING_DOSUM "DO_SAMPLING"			        // only sampling should be done
 #define PROP_SUMMARIZATION_DOSUM "DO_SUMMARIZATION"         // this property is
 															// set if
 															// summarization

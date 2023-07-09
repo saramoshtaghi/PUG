@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------
  *
- * summarize_main.h
+ * sampling_main.h
  *			  
  *		
  *		AUTHOR: seokki
@@ -16,4 +16,4 @@
 #include "model/query_operator/query_operator.h"
 #include "model/set/hashmap.h"
 
-extern Node *rewriteSummaryOutput (Node *rewrittenTree, HashMap *summOpts, ProvQuestion qType);
+extern Node *rewriteSampleOutput (Node *rewrittenTree, HashMap *summOpts, ProvQuestion qType);

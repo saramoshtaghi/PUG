@@ -30,6 +30,7 @@
 #include "provenance_rewriter/prov_utility.h"
 #include "provenance_rewriter/game_provenance/gp_main.h"
 #include "provenance_rewriter/summarization_rewrites/summarize_main.h"
+#include "provenance_rewriter/summarization_rewrites/sampling_main.h"
 #include "utility/string_utils.h"
 
 static Node *translateProgram(DLProgram *p);
@@ -451,11 +452,13 @@ translateProgram(DLProgram *p)
 //        	return (Node *) summInputs;
 
             boolean doSumm = DL_HAS_PROP(p, PROP_SUMMARIZATION_DOSUM) && !IS_GP_PROV(p);
+            boolean doSamp = DL_HAS_PROP(p, PROP_SAMPLING_DOSUM) && !IS_GP_PROV(p);
+
         	ProvQuestion qType = PROV_Q_WHY;
         	HashMap *props = copyObject(p->n.properties);
         	Node *result = NULL;
 
-        	if(doSumm)
+        	if(doSumm || doSamp)
         		qType = (ProvQuestion) INT_VALUE(DL_GET_PROP(p, PROP_SUMMARIZATION_QTYPE));
 
         	if (doSumm)
@@ -464,6 +467,14 @@ translateProgram(DLProgram *p)
 				MAP_ADD_STRING_KEY(props, PROP_SUMMARIZATION_IS_DL, createConstBool(TRUE));
 				result = rewriteSummaryOutput((Node *) summInputs, props, qType);
 				INFO_OP_LOG("translated DL model with summarization:\n", result);
+			}
+
+			if (doSamp)
+			{
+				DEBUG_LOG("add relational algebra sampling code");
+//				MAP_ADD_STRING_KEY(props, PROP_SUMMARIZATION_IS_DL, createConstBool(TRUE));
+				result = rewriteSampleOutput((Node *) summInputs, props, qType);
+				INFO_OP_LOG("translated DL model with sampling:\n", result);
 			}
 
         	return result;
